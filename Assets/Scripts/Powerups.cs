@@ -6,6 +6,8 @@ public class Powerups : MonoBehaviour
 {
     [SerializeField]
     private float _powerupSpeed = 3.0f;
+    [SerializeField] //0-Triple Shot 1-Speed Boost 2-Sheild
+    private int _powerupID;
     void Update()
     {
         transform.Translate(Vector3.down * _powerupSpeed * Time.deltaTime);
@@ -23,7 +25,21 @@ public class Powerups : MonoBehaviour
             Player player = collision.transform.GetComponent<Player>();
             if (player != null)
             {
-                player.TripleShotActive();
+                switch (_powerupID)
+                {
+                    case 0:
+                        player.TripleShotActive();
+                        break;
+                    case 1:
+                        player.SpeedBoostActive();
+                        break;
+                    case 2:
+                        Debug.Log("Sheild");
+                        break;
+                    default:
+                        Debug.Log("Nah");
+                        break;
+                }
             }
             Destroy(this.gameObject);
         }
