@@ -133,3 +133,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab60f13d676f9b54bb594d9dea5a1d30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _asteroidSpeed: 20
+  _explosionprefab: {fileID: 2847383245259755986, guid: e33f90998c655fd4fbcfdbe73e9ebf6c,
+    type: 3}

@@ -49,7 +49,7 @@ public class Enemy : MonoBehaviour
                 player.Damage();
             }
             _anim.SetTrigger("onEnemyDeath");
-            _enemySpeed = 0;
+            _enemySpeed = 0; 
             Destroy(this.gameObject, 1.3f);  
         }
 
