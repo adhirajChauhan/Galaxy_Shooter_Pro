@@ -20,6 +20,10 @@ public class Player : MonoBehaviour
     
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
+    private bool _isSheildActive = false;
+
+    [SerializeField]
+    private GameObject _sheildVisualizer;
     // Start is called before the first frame update
     void Start()
     {
@@ -87,13 +91,21 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        _lives --;
-
-        if (_lives < 1)
+        if (_isSheildActive == true)
         {
-            _spawnManager.onPlayerDeath();
-            Destroy(this.gameObject);
+            _isSheildActive = false;
+            _sheildVisualizer.SetActive(false);
+            return;
         }
+            _lives--;
+
+            if (_lives < 1)
+            {
+                _spawnManager.onPlayerDeath();
+                Destroy(this.gameObject);
+            }
+        
+
     }
 
     public void TripleShotActive()
@@ -120,5 +132,11 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5f);
         _isSpeedBoostActive = false;
         _speed /= _speedMultiplier;
+    }
+
+    public void SheildActive()
+    {
+        _isSheildActive = true;
+        _sheildVisualizer.SetActive(true);
     }
 }
