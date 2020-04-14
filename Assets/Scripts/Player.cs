@@ -24,15 +24,27 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private GameObject _sheildVisualizer;
+
+    [SerializeField]
+    private UIManager _uiManager;
+
+    [SerializeField]
+    private int _score;
     // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn manager is NULL");
+        }
+
+        if (_uiManager == null)
+        {
+            Debug.LogError("UI Manager is NULL");
         }
     }
 
@@ -99,6 +111,8 @@ public class Player : MonoBehaviour
         }
             _lives--;
 
+        _uiManager.UpdateLives(_lives);
+
             if (_lives < 1)
             {
                 _spawnManager.onPlayerDeath();
@@ -139,4 +153,11 @@ public class Player : MonoBehaviour
         _isSheildActive = true;
         _sheildVisualizer.SetActive(true);
     }
+
+    public void AddingScore(int points)
+    {
+        _score += points;
+        _uiManager.UpdateScore(_score);
+    }
+
 }
