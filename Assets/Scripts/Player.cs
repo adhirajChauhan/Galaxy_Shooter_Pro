@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour
 {
@@ -33,12 +33,17 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private int _score;
+
+    [SerializeField]
+    private AudioClip _laserAudio;
+    private AudioSource _audioSource;
     // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _audioSource = GetComponent<AudioSource>();
 
         if (_spawnManager == null)
         {
@@ -49,14 +54,31 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("UI Manager is NULL");
         }
+
+        if (_audioSource == null)
+        {
+            Debug.LogError("Audio Source is NULL");
+        }
+        else
+        {
+            _audioSource.clip = _laserAudio;
+        }
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+#if UNITY_ANDROID
+
+        if (Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Fire") && Time.time > _canFire)
+        {
+            FireLaser();
+        }
+        #endif
+
+    
         calculateMovement();
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) && Time.time > _canFire)
         {
             FireLaser();
         }
@@ -64,8 +86,8 @@ public class Player : MonoBehaviour
     
     void calculateMovement()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal"); // Input.GetAxis("Horizontal");
+        float verticalInput = CrossPlatformInputManager.GetAxis("Vertical"); // Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
@@ -102,6 +124,7 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
+        _audioSource.Play();
     }
 
     public void Damage()
